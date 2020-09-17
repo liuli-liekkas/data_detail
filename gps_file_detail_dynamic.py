@@ -1,5 +1,4 @@
 import os.path
-import numpy as np
 import math
 
 
@@ -27,11 +26,7 @@ def geo_distance(lng_test, lat_test, lng_default, lat_default):
 #     return dis
 
 
-
 path1 = "e:/LEAR_GNSS_Test/Comb"
-
-
-
 os.chdir(path1)
 data_test_detail = {}
 distance_get = []
