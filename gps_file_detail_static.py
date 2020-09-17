@@ -39,14 +39,14 @@ def geo_distance(lng_test, lat_test, lng_ref, lat_ref):
 #         os.chdir(path1)
 #         os.rename(filename, new_name)
 # files = os.listdir(path1)
-filename_ref = './gnss/static/ref-1.txt'
-filename_test = './gnss/static/test-1.txt'
+filename_ref = './gnss/speed/7000ref-5.txt'
+filename_test = './gnss/speed/7000test-5.txt'
+data_ref_gprmc = {}
 data_ref_gpgga = {}
-data_ref_gnrmc = {}
-data_test_gpgga = {}
 data_test_gnrmc = {}
 data_test_gngga = {}
 data_detail_final = []
+data_speed_final = []
 lng_default = 13
 lat_default = 50
 h_default = 50
@@ -54,6 +54,15 @@ h_default = 50
 with open(filename_ref, 'r') as file_ref:
     data_ref = file_ref.readlines()
     num = len(data_ref)
+# REF_GPRMC
+for line in range(num):
+    data_ref_split = data_ref[line].split(',')
+    if data_ref_split[0] == '$GPRMC':
+        if data_ref_split[3]:
+            data_ref_gprmc[data_ref_split[1]] = [data_ref_split[5],
+                                                 data_ref_split[3],
+                                                 data_ref_split[7]]
+# REF_GPGGA
 for line in range(num):
     data_ref_split = data_ref[line].split(',')
     if data_ref_split[0] == '$GPGGA':
@@ -63,21 +72,40 @@ for line in range(num):
 with open(filename_test, 'r') as file_test:
     data_test = file_test.readlines()
     num = len(data_test)
+# TEST_GPRMC
+for line in range(num):
+    data_test_split = data_test[line].split(',')
+    if data_test_split[0] == '$GNRMC':
+        if data_test_split[3]:
+            data_test_gnrmc[data_test_split[1].split('.')[0]] = [data_test_split[5],
+                                                                 data_test_split[3],
+                                                                 data_test_split[7]]
+# TEST_GNGGA
 for line in range(num):
     data_test_split = data_test[line].split(',')
     if data_test_split[0] == '$GNGGA':
         if data_test_split[3]:
             data_test_gngga[data_test_split[1].split('.')[0]] = [data_test_split[4], data_test_split[2]]
-# 开始比对测试
-for key in data_test_gngga:
-    if key in data_ref_gpgga.keys():
-        distance = geo_distance(float(data_test_gngga[key][1]), float(data_test_gngga[key][0]),
-                                float(data_ref_gpgga[key][1]), float(data_ref_gpgga[key][0]))
+# 开始比对测试GGA
+# for key in data_test_gngga:
+#     if key in data_ref_gpgga.keys():
+#         distance = geo_distance(float(data_test_gngga[key][1]), float(data_test_gngga[key][0]),
+#                                 float(data_ref_gpgga[key][1]), float(data_ref_gpgga[key][0]))
+#         data_detail_final.append(distance)
+
+# 开始比对测试RMC
+for key in data_test_gnrmc:
+    if key in data_ref_gprmc.keys():
+        distance = geo_distance(float(data_test_gnrmc[key][1]), float(data_test_gnrmc[key][0]),
+                                float(data_ref_gprmc[key][1]), float(data_ref_gprmc[key][0]))
+        speed = (float(data_test_gnrmc[key][2]) - float(data_ref_gprmc[key][2]))/(1.852*3.6)
         data_detail_final.append(distance)
-
+        data_speed_final.append(speed)
 print('定位误差最大值:', max(data_detail_final))
+print('速度误差最大值:', max(data_speed_final))
 print('定位误差最小值:', min(data_detail_final))
+print('速度误差最小值:', min(data_speed_final))
 print('定位误差平均值:', sum(data_detail_final)/len(data_detail_final))
+print('速度误差平均值:', sum(data_speed_final)/len(data_speed_final))
 print('定位误差标准差:', math.sqrt(sum(list(map(lambda x: x**2, data_detail_final))) / (len(data_detail_final)-1)))
-
-print(len(data_detail_final))
+print('速度误差标准差:', math.sqrt(sum(list(map(lambda x: x**2, data_speed_final))) / (len(data_speed_final)-1)))
