@@ -23,7 +23,6 @@ def change_standard():
             new_message = line.split(',')
             if new_message[0] == '$GARMC':
                 new_message[1] = new_message[1] + ',' + 'A'
-                # print(new_message)
                 new_message_detail = ','.join(new_message)
                 print(new_message_detail)
 

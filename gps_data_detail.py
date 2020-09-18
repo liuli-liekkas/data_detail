@@ -30,15 +30,6 @@ def geo_distance(lng_test, lat_test, lng_ref, lat_ref):
 # path1 = "e:/LEAR_GNSS_Test/Galileo"
 # path1 = "./gnss/static"
 # os.chdir(path1)
-# 后缀名改.dat为.txt
-# files = os.listdir(path1)
-# for filename in files:
-#     portion = os.path.splitext(filename)
-#     if portion[1] == '.dat':
-#         new_name = portion[0] + '.txt'
-#         os.chdir(path1)
-#         os.rename(filename, new_name)
-# files = os.listdir(path1)
 filename_ref = './gnss/speed/7000ref-5.txt'
 filename_test = './gnss/speed/7000test-5.txt'
 data_ref_gprmc = {}
