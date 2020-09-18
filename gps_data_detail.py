@@ -98,7 +98,7 @@ for key in data_test_gnrmc:
     if key in data_ref_gprmc.keys():
         distance = geo_distance(float(data_test_gnrmc[key][1]), float(data_test_gnrmc[key][0]),
                                 float(data_ref_gprmc[key][1]), float(data_ref_gprmc[key][0]))
-        speed = (float(data_test_gnrmc[key][2]) - float(data_ref_gprmc[key][2]))/(1.852*3.6)
+        speed = (float(data_test_gnrmc[key][2]) - float(data_ref_gprmc[key][2]))/3.6*1.852
         data_detail_final.append(distance)
         data_speed_final.append(speed)
 print('定位误差最大值:', max(data_detail_final))
