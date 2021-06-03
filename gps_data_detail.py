@@ -30,14 +30,19 @@ def geo_distance(lng_test, lat_test, lng_ref, lat_ref):
 # path1 = "e:/LEAR_GNSS_Test/Galileo"
 # path1 = "./gnss/static"
 # os.chdir(path1)
-filename_ref = './gnss/speed/7000ref-5.txt'
-filename_test = './gnss/speed/7000test-5.txt'
+filename_ref = './gnss/speed/ref20210303-2.txt'
+filename_test = './gnss/speed/test20210303-2.txt'
 data_ref_gprmc = {}
 data_ref_gpgga = {}
 data_test_gnrmc = {}
 data_test_gngga = {}
 data_detail_final = []
 data_speed_final = []
+data_ref_total_distance = []
+data_test_total_distance = []
+ref_total_distance = 0
+test_total_distance = 0
+
 lng_default = 13
 lat_default = 50
 h_default = 50
@@ -90,13 +95,33 @@ for key in data_test_gnrmc:
         distance = geo_distance(float(data_test_gnrmc[key][1]), float(data_test_gnrmc[key][0]),
                                 float(data_ref_gprmc[key][1]), float(data_ref_gprmc[key][0]))
         speed = (float(data_test_gnrmc[key][2]) - float(data_ref_gprmc[key][2]))/3.6*1.852
+        data_test_total_distance.append([data_test_gnrmc[key][1], data_test_gnrmc[key][0]])
+        data_ref_total_distance.append([data_ref_gprmc[key][1], data_ref_gprmc[key][0]])
         data_detail_final.append(distance)
         data_speed_final.append(speed)
-print('定位误差最大值:', max(data_detail_final))
-print('速度误差最大值:', max(data_speed_final))
-print('定位误差最小值:', min(data_detail_final))
-print('速度误差最小值:', min(data_speed_final))
-print('定位误差平均值:', sum(data_detail_final)/len(data_detail_final))
-print('速度误差平均值:', sum(data_speed_final)/len(data_speed_final))
-print('定位误差标准差:', math.sqrt(sum(list(map(lambda x: x**2, data_detail_final))) / (len(data_detail_final)-1)))
-print('速度误差标准差:', math.sqrt(sum(list(map(lambda x: x**2, data_speed_final))) / (len(data_speed_final)-1)))
+
+# 待测件行驶的里程数
+for i in range(0, len(data_test_total_distance)-2):
+    test_total_distance += geo_distance(float(data_test_total_distance[i+1][0]), float(data_test_total_distance[i+1][1]),
+                                        float(data_test_total_distance[i][0]), float(data_test_total_distance[i][1]))
+    i += 1
+# print(test_total_distance)
+
+# 基准信号行驶的里程数
+for i in range(0, len(data_ref_total_distance)-2):
+    ref_total_distance += geo_distance(float(data_ref_total_distance[i+1][0]), float(data_ref_total_distance[i+1][1]),
+                                       float(data_ref_total_distance[i][0]), float(data_ref_total_distance[i][1]))
+    i += 1
+# print(ref_total_distance)
+
+print('行驶的里程数：', round(ref_total_distance, 4))
+print('行驶的里程误差：', round(ref_total_distance - test_total_distance, 4))
+print('定位误差最大值:', round(max(data_detail_final), 4))
+print('速度误差最大值:', round(max(data_speed_final), 4))
+print('定位误差最小值:', round(min(data_detail_final), 4))
+print('速度误差最小值:', round(min(data_speed_final), 4))
+print('定位误差平均值:', round(sum(data_detail_final)/len(data_detail_final), 4))
+print('速度误差平均值:', round(sum(data_speed_final)/len(data_speed_final), 4))
+print('定位误差标准差:', round(math.sqrt(sum(list(map(lambda x: x**2, data_detail_final))) / (len(data_detail_final)-1)), 4))
+print('速度误差标准差:', round(math.sqrt(sum(list(map(lambda x: x**2, data_speed_final))) / (len(data_speed_final)-1)), 4))
+
