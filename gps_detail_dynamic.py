@@ -27,9 +27,6 @@ def geo_distance(lng_test, lat_test, lng_ref, lat_ref):
 
 
 # 数据格式化
-# path1 = "e:/LEAR_GNSS_Test/Galileo"
-# path1 = "./gnss/static"
-# os.chdir(path1)
 filename_ref = './gnss/speed/ref20210303-2.txt'
 filename_test = './gnss/speed/test20210303-2.txt'
 data_ref_gprmc = {}
@@ -64,7 +61,7 @@ for line in range(num):
     if data_ref_split[0] == '$GPGGA':
         if data_ref_split[3]:
             data_ref_gpgga[data_ref_split[1]] = [data_ref_split[4], data_ref_split[2]]
-# 录入测试数据
+# 录入测试数据_动态点
 with open(filename_test, 'r') as file_test:
     data_test = file_test.readlines()
     num = len(data_test)
@@ -89,7 +86,7 @@ for line in range(num):
 #                                 float(data_ref_gpgga[key][1]), float(data_ref_gpgga[key][0]))
 #         data_detail_final.append(distance)
 
-# 开始比对测试RMC
+# 开始比对测试RMC_动态点
 for key in data_test_gnrmc:
     if key in data_ref_gprmc.keys():
         distance = geo_distance(float(data_test_gnrmc[key][1]), float(data_test_gnrmc[key][0]),
