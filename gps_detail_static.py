@@ -6,8 +6,10 @@ import math
 def geo_distance(lng_test, lat_test):
     lng_test = round(lng_test // 100 + lng_test % 100 / 60, 6)
     lat_test = round(lat_test // 100 + lat_test % 100 / 60, 6)
-    lng_ref = 121.18034
-    lat_ref = 31.28351
+    lng_ref = 120
+    lat_ref = 30
+    # lng_ref = 121.18034
+    # lat_ref = 31.28351
     # 角度转弧度
     lng1, lat1, lng2, lat2 = map(math.radians, [lng_test, lat_test, lng_ref, lat_ref])
     d_lng = lng2 - lng1
@@ -18,7 +20,7 @@ def geo_distance(lng_test, lat_test):
 
 
 # 数据格式化
-filename_test = './gnss/test20210608/RxRec20210608-5.txt'
+filename_test = './gnss/test20210622/test20210622_detail.txt'
 data_test_gnrmc = {}
 data_detail_final = []
 data_speed_final = []
@@ -33,7 +35,7 @@ with open(filename_test, 'r') as file_test:
 # TEST_GPRMC
 for line in range(num):
     data_test_split = data_test[line].split(',')
-    if data_test_split[0] == '$GNRMC':
+    if data_test_split[0] == 'GNRMC':
         if data_test_split[5]:
             distance = geo_distance(float(data_test_split[5]), float(data_test_split[3]))
             data_detail_final.append(distance)

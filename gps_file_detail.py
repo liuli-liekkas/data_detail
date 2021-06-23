@@ -27,7 +27,7 @@ def change_standard():
 def delete_ending():
     new_data = []
     second_data = ''
-    with open('./gnss/test20210622/test20210622.txt') as file_default:
+    with open('./gnss/test20210622/single_gps.txt') as file_default:
         data_default = file_default.readlines()
         for line in data_default:
             line = line[0:-1]
@@ -38,7 +38,7 @@ def delete_ending():
         # print(num)
         third_data = second_data.split('$')
 
-    with open('./gnss/test20210622/test20210622_detail.txt','w+') as file:
+    with open('./gnss/test20210622/single_gps_detail.txt', 'w+') as file:
         for line in third_data:
             file.write(line + '\n')
 
