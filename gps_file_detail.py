@@ -1,9 +1,6 @@
 # 数据格式化
 import os.path
 
-path1 = "e:/LEAR_GNSS_Test/Comb"
-os.chdir(path1)
-
 
 # .dat文件改为.txt
 def change_name():
@@ -27,5 +24,24 @@ def change_standard():
                 print(new_message_detail)
 
 
+def delete_ending():
+    new_data = []
+    second_data = ''
+    with open('./gnss/test20210622/test20210622.txt') as file_default:
+        data_default = file_default.readlines()
+        for line in data_default:
+            line = line[0:-1]
+            new_data.append(line)
+        for num in range(len(new_data)):
+            second_data = second_data + new_data[num]
+        # num = len(second_data)
+        # print(num)
+        third_data = second_data.split('$')
+
+    with open('./gnss/test20210622/test20210622_detail.txt','w+') as file:
+        for line in third_data:
+            file.write(line + '\n')
+
+
 if __name__ == '__main__':
-    change_standard()
+    delete_ending()
