@@ -27,14 +27,15 @@ def geo_distance(lng_test, lat_test, lng_ref, lat_ref):
 
 
 # 数据格式化
-filename_ref = './gnss/speed/ref20210303-2.txt'
-filename_test = './gnss/speed/test20210303-2.txt'
+filename_ref = './gnss/test20210623/GPS+BD-ref.txt'
+filename_test = './gnss/test20210623/BD-rec.txt'
 data_ref_gprmc = {}
 data_ref_gpgga = {}
 data_test_gnrmc = {}
 data_test_gngga = {}
 data_detail_final = []
 data_speed_final = []
+data_high_final = []
 data_ref_total_distance = []
 data_test_total_distance = []
 ref_total_distance = 0
@@ -54,7 +55,8 @@ for line in range(num):
         if data_ref_split[3]:
             data_ref_gprmc[data_ref_split[1]] = [data_ref_split[5],
                                                  data_ref_split[3],
-                                                 data_ref_split[7]]
+                                                 data_ref_split[7],
+                                                 data_ref_split[8]]
 # REF_GPGGA
 for line in range(num):
     data_ref_split = data_ref[line].split(',')
@@ -72,7 +74,8 @@ for line in range(num):
         if data_test_split[3]:
             data_test_gnrmc[data_test_split[1].split('.')[0]] = [data_test_split[5],
                                                                  data_test_split[3],
-                                                                 data_test_split[7]]
+                                                                 data_test_split[7],
+                                                                 data_test_split[8]]
 # TEST_GNGGA
 for line in range(num):
     data_test_split = data_test[line].split(',')
@@ -92,10 +95,12 @@ for key in data_test_gnrmc:
         distance = geo_distance(float(data_test_gnrmc[key][1]), float(data_test_gnrmc[key][0]),
                                 float(data_ref_gprmc[key][1]), float(data_ref_gprmc[key][0]))
         speed = (float(data_test_gnrmc[key][2]) - float(data_ref_gprmc[key][2]))/3.6*1.852
+        high = float(data_test_gnrmc[key][3]) - float(data_ref_gprmc[key][3])
         data_test_total_distance.append([data_test_gnrmc[key][1], data_test_gnrmc[key][0]])
         data_ref_total_distance.append([data_ref_gprmc[key][1], data_ref_gprmc[key][0]])
         data_detail_final.append(distance)
         data_speed_final.append(speed)
+        data_high_final.append(high)
 
 # 待测件行驶的里程数
 for i in range(0, len(data_test_total_distance)-2):
@@ -111,14 +116,20 @@ for i in range(0, len(data_ref_total_distance)-2):
     i += 1
 # print(ref_total_distance)
 
+print('距离单位：m，速度单位：m/s')
 print('行驶的里程数：', round(ref_total_distance, 4))
 print('行驶的里程误差：', round(ref_total_distance - test_total_distance, 4))
 print('定位误差最大值:', round(max(data_detail_final), 4))
 print('速度误差最大值:', round(max(data_speed_final), 4))
+print('高程误差最大值:', round(max(data_high_final), 4))
+print('速度误差最大值:', round(max(data_speed_final), 4))
 print('定位误差最小值:', round(min(data_detail_final), 4))
 print('速度误差最小值:', round(min(data_speed_final), 4))
+print('高程误差最小值:', round(min(data_high_final), 4))
 print('定位误差平均值:', round(sum(data_detail_final)/len(data_detail_final), 4))
 print('速度误差平均值:', round(sum(data_speed_final)/len(data_speed_final), 4))
+print('高程误差平均值:', round(sum(data_high_final)/len(data_high_final), 4))
 print('定位误差标准差:', round(math.sqrt(sum(list(map(lambda x: x**2, data_detail_final))) / (len(data_detail_final)-1)), 4))
 print('速度误差标准差:', round(math.sqrt(sum(list(map(lambda x: x**2, data_speed_final))) / (len(data_speed_final)-1)), 4))
+print('高程误差标准差:', round(math.sqrt(sum(list(map(lambda x: x**2, data_high_final))) / (len(data_high_final)-1)), 4))
 

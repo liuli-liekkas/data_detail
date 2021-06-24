@@ -23,7 +23,7 @@ def geo_distance(lng_test, lat_test):
 filename_test = './gnss/test20210622/test20210622_detail.txt'
 data_test_gnrmc = {}
 data_detail_final = []
-data_speed_final = []
+data_high_final = []
 data_test_total_distance = []
 test_total_distance = 0
 
@@ -38,10 +38,16 @@ for line in range(num):
     if data_test_split[0] == 'GNRMC':
         if data_test_split[5]:
             distance = geo_distance(float(data_test_split[5]), float(data_test_split[3]))
+            high = float(data_test_gnrmc[key][3]) - float(data_ref_gprmc[key][3])
             data_detail_final.append(distance)
+
 
 print('定位误差最大值:', round(max(data_detail_final), 4))
 print('定位误差最小值:', round(min(data_detail_final), 4))
 print('定位误差平均值:', round(sum(data_detail_final)/len(data_detail_final), 4))
 print('定位误差标准差:', round(math.sqrt(sum(list(map(lambda x: x**2, data_detail_final))) / (len(data_detail_final)-1)), 4))
+print('高程误差最大值:', round(max(data_high_final), 4))
+print('高程误差最小值:', round(min(data_high_final), 4))
+print('高程误差平均值:', round(sum(data_high_final)/len(data_high_final), 4))
+print('高程误差标准差:', round(math.sqrt(sum(list(map(lambda x: x**2, data_detail_final))) / (len(data_high_final)-1)), 4))
 
