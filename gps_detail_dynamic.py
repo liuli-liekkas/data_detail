@@ -41,9 +41,6 @@ data_test_total_distance = []
 ref_total_distance = 0
 test_total_distance = 0
 
-lng_default = 13
-lat_default = 50
-h_default = 50
 # 录入参考数据
 with open(filename_ref, 'r') as file_ref:
     data_ref = file_ref.readlines()

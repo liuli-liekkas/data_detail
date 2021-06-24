@@ -20,13 +20,18 @@ def geo_distance(lng_test, lat_test):
 
 
 # 数据格式化
-filename_test = './gnss/test20210622/test20210622_detail.txt'
+filename_test = 'gnss/test20210622/single_gps_detail_rec.txt'
+data_ref_gprmc = {}
+data_ref_gpgga = {}
 data_test_gnrmc = {}
+data_test_gngga = {}
 data_detail_final = []
+data_speed_final = []
 data_high_final = []
+data_ref_total_distance = []
 data_test_total_distance = []
+ref_total_distance = 0
 test_total_distance = 0
-
 
 # 录入测试数据_静态点
 with open(filename_test, 'r') as file_test:
@@ -38,9 +43,8 @@ for line in range(num):
     if data_test_split[0] == 'GNRMC':
         if data_test_split[5]:
             distance = geo_distance(float(data_test_split[5]), float(data_test_split[3]))
-            high = float(data_test_gnrmc[key][3]) - float(data_ref_gprmc[key][3])
+            print(data_test_split[8])
             data_detail_final.append(distance)
-
 
 print('定位误差最大值:', round(max(data_detail_final), 4))
 print('定位误差最小值:', round(min(data_detail_final), 4))
