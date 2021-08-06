@@ -20,7 +20,7 @@ def geo_distance(lng_test, lat_test):
 
 
 # 数据格式化
-filename_test = 'gnss/test20210622/single_gps_detail_rec.txt'
+filename_test = 'gnss/test20210805/8445_static_combine.txt'
 data_ref_gprmc = {}
 data_ref_gpgga = {}
 data_test_gnrmc = {}
@@ -40,7 +40,7 @@ with open(filename_test, 'r') as file_test:
 # TEST_GPRMC
 for line in range(num):
     data_test_split = data_test[line].split(',')
-    if data_test_split[0] == 'GNRMC':
+    if data_test_split[0] == '$GPRMC':
         if data_test_split[5]:
             distance = geo_distance(float(data_test_split[5]), float(data_test_split[3]))
             print(data_test_split[8])

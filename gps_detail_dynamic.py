@@ -27,8 +27,8 @@ def geo_distance(lng_test, lat_test, lng_ref, lat_ref):
 
 
 # 数据格式化
-filename_ref = './gnss/test20210623/GPS+BD-ref.txt'
-filename_test = './gnss/test20210623/BD-rec.txt'
+filename_ref = './gnss/test20210805/8415_dynamic_opensky_ref.txt'
+filename_test = './gnss/test20210805/8415_dynamic_opensky_test.txt'
 data_ref_gprmc = {}
 data_ref_gpgga = {}
 data_test_gnrmc = {}
@@ -67,7 +67,7 @@ with open(filename_test, 'r') as file_test:
 # TEST_GPRMC
 for line in range(num):
     data_test_split = data_test[line].split(',')
-    if data_test_split[0] == '$GNRMC':
+    if data_test_split[0] == '$GPRMC':
         if data_test_split[3]:
             data_test_gnrmc[data_test_split[1].split('.')[0]] = [data_test_split[5],
                                                                  data_test_split[3],
@@ -76,7 +76,7 @@ for line in range(num):
 # TEST_GNGGA
 for line in range(num):
     data_test_split = data_test[line].split(',')
-    if data_test_split[0] == '$GNGGA':
+    if data_test_split[0] == '$GPGGA':
         if data_test_split[3]:
             data_test_gngga[data_test_split[1].split('.')[0]] = [data_test_split[4], data_test_split[2]]
 # 开始比对测试GGA
