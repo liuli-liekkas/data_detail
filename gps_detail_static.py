@@ -20,7 +20,7 @@ def geo_distance(lng_test, lat_test):
 
 
 # 数据格式化
-filename_test = 'gnss/test20210805/8445_static_combine.txt'
+filename_test = 'gnss/test20210805/8452_static_single.txt'
 data_ref_gprmc = {}
 data_ref_gpgga = {}
 data_test_gnrmc = {}
