@@ -6,8 +6,8 @@ import math
 def geo_distance(lng_test, lat_test):
     lng_test = round(lng_test // 100 + lng_test % 100 / 60, 6)
     lat_test = round(lat_test // 100 + lat_test % 100 / 60, 6)
-    lng_ref = 120
-    lat_ref = 30
+    lng_ref = 11.5
+    lat_ref = 48.25
     # lng_ref = 121.18034
     # lat_ref = 31.28351
     # 角度转弧度
@@ -20,7 +20,7 @@ def geo_distance(lng_test, lat_test):
 
 
 # 数据格式化
-filename_test = 'gnss/test20210805/8452_static_single.txt'
+filename_test = 'gnss/test20210816/测试数据汇总/CASE2/单伽利略/CASE2_GA_DUT.txt'
 data_ref_gprmc = {}
 data_ref_gpgga = {}
 data_test_gnrmc = {}
@@ -34,7 +34,7 @@ ref_total_distance = 0
 test_total_distance = 0
 
 # 录入测试数据_静态点
-with open(filename_test, 'r') as file_test:
+with open(filename_test, 'r', encoding='utf-8') as file_test:
     data_test = file_test.readlines()
     num = len(data_test)
 # TEST_GPRMC
@@ -50,8 +50,4 @@ print('定位误差最大值:', round(max(data_detail_final), 4))
 print('定位误差最小值:', round(min(data_detail_final), 4))
 print('定位误差平均值:', round(sum(data_detail_final)/len(data_detail_final), 4))
 print('定位误差标准差:', round(math.sqrt(sum(list(map(lambda x: x**2, data_detail_final))) / (len(data_detail_final)-1)), 4))
-print('高程误差最大值:', round(max(data_high_final), 4))
-print('高程误差最小值:', round(min(data_high_final), 4))
-print('高程误差平均值:', round(sum(data_high_final)/len(data_high_final), 4))
-print('高程误差标准差:', round(math.sqrt(sum(list(map(lambda x: x**2, data_detail_final))) / (len(data_high_final)-1)), 4))
 
