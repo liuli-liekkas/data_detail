@@ -22,7 +22,7 @@ def geo_distance(lng_test, lat_test):
 
 
 # 数据格式化
-filename_test = 'gnss/test20210830/mtk_combine_static_precision_urbancanyon.txt'
+filename_test = 'gnss/test20210830/mtk_bd_static_precision_urbancanyon-f.txt'
 data_ref_gprmc = {}
 data_ref_gpgga = {}
 data_test_gnrmc = {}
@@ -40,7 +40,7 @@ with open(filename_test, 'r', encoding='utf-8') as file_test:
     data_test = file_test.readlines()
     num = len(data_test)
 # TEST_GPRMC
-for line in range(num):
+for line in range(num-6000):
     data_test_split = data_test[line].split(',')
     if data_test_split[0] == '$GNRMC':
         if data_test_split[5]:
