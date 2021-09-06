@@ -29,8 +29,8 @@ def geo_distance(lng_test, lat_test, lng_ref, lat_ref):
 
 
 # 数据格式化
-filename_ref = './gnss/test20210830/ublox_combine_dynamic_precision_opensky_ref.txt'
-filename_test = 'gnss/test20210830/ublox_combine_static_precision_opensky.txt'
+filename_ref = 'gnss/test20210830/ublox_bd_dynamic_precision_urbancanyon_ref.txt'
+filename_test = 'gnss/test20210830/ublox_bd_dynamic_precision_urbancanyon.txt'
 data_ref_gprmc = {}
 data_ref_gpgga = {}
 data_test_gnrmc = {}
@@ -50,7 +50,7 @@ with open(filename_ref, 'r') as file_ref:
 # REF_GPRMC
 for line in range(num):
     data_ref_split = data_ref[line].split(',')
-    if data_ref_split[0] == '$GPRMC':
+    if data_ref_split[0] == '$GLRMC':
         if len(data_ref_split) > 8:
             if data_ref_split[3]:
                 data_ref_gprmc[data_ref_split[1]] = [data_ref_split[5],  # 经度

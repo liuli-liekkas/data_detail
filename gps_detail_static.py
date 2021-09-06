@@ -1,6 +1,8 @@
 import os.path
 import math
-
+import numpy as np
+import matplotlib as mpl
+import matplotlib.pyplot as plt
 
 # 经典两点计算公式
 def geo_distance(lng_test, lat_test):
@@ -20,7 +22,7 @@ def geo_distance(lng_test, lat_test):
 
 
 # 数据格式化
-filename_test = 'gnss/test20210830/ublox_combine_static_precision_opensky.txt'
+filename_test = 'gnss/test20210830/mtk_combine_static_precision_urbancanyon.txt'
 data_ref_gprmc = {}
 data_ref_gpgga = {}
 data_test_gnrmc = {}
@@ -50,3 +52,7 @@ print('定位误差最小值:', round(min(data_detail_final), 4))
 print('定位误差平均值:', round(sum(data_detail_final)/len(data_detail_final), 4))
 print('定位误差标准差:', round(math.sqrt(sum(list(map(lambda x: x**2, data_detail_final))) / (len(data_detail_final)-1)), 4))
 
+y1 = data_detail_final
+x1 = range(len(y1))
+plt.plot(y1)
+plt.show()
