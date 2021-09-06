@@ -6,8 +6,8 @@ import math
 def geo_distance(lng_test, lat_test):
     lng_test = round(lng_test // 100 + lng_test % 100 / 60, 6)
     lat_test = round(lat_test // 100 + lat_test % 100 / 60, 6)
-    lng_ref = 11.5
-    lat_ref = 48.25
+    lng_ref = 120
+    lat_ref = 30
     # lng_ref = 121.18034
     # lat_ref = 31.28351
     # 角度转弧度
@@ -20,7 +20,7 @@ def geo_distance(lng_test, lat_test):
 
 
 # 数据格式化
-filename_test = 'gnss/test20210816/测试数据汇总/CASE2/单伽利略/CASE2_GA_DUT.txt'
+filename_test = 'gnss/test20210830/ublox_combine_static_precision_opensky.txt'
 data_ref_gprmc = {}
 data_ref_gpgga = {}
 data_test_gnrmc = {}
@@ -40,10 +40,9 @@ with open(filename_test, 'r', encoding='utf-8') as file_test:
 # TEST_GPRMC
 for line in range(num):
     data_test_split = data_test[line].split(',')
-    if data_test_split[0] == '$GPRMC':
+    if data_test_split[0] == '$GNRMC':
         if data_test_split[5]:
             distance = geo_distance(float(data_test_split[5]), float(data_test_split[3]))
-            print(data_test_split[8])
             data_detail_final.append(distance)
 
 print('定位误差最大值:', round(max(data_detail_final), 4))
