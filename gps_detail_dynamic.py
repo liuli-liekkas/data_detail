@@ -29,8 +29,8 @@ def geo_distance(lng_test, lat_test, lng_ref, lat_ref):
 
 
 # 数据格式化
-filename_ref = 'gnss/test20210830/mtk_combine_dynamic_precision_opensky_ref-f.txt'
-filename_test = 'gnss/test20210830/mtk_combine_dynamic_precision_opensky-f.txt'
+filename_ref = 'gnss/test20210830/quectel_bd_dynamic_precision_opensky_ref.txt'
+filename_test = 'gnss/test20210830/quectel_bd_dynamic_precision_opensky.txt'
 data_ref_gprmc = {}
 data_ref_gpgga = {}
 data_test_gnrmc = {}
@@ -50,7 +50,7 @@ with open(filename_ref, 'r') as file_ref:
 # REF_GPRMC
 for line in range(num):
     data_ref_split = data_ref[line].split(',')
-    if data_ref_split[0] == '$GLRMC':
+    if data_ref_split[0] == '$GPRMC':
         if len(data_ref_split) > 8:
             if data_ref_split[3]:
                 data_ref_gprmc[data_ref_split[1]] = [data_ref_split[5],  # 经度
@@ -65,8 +65,7 @@ for line in range(num):
                 data_ref_gpgga[data_ref_split[1]] = [data_ref_split[4],  # 经度
                                                      data_ref_split[2],  # 纬度
                                                      data_ref_split[9],  # 海平面高度
-                                                     data_ref_split[10]]  # 地平面高度
-
+                                                     data_ref_split[11]]  # 地平面高度
 # 录入测试数据_动态点
 with open(filename_test, 'r', encoding='utf-8') as file_test:
     data_test = file_test.readlines()
@@ -74,7 +73,7 @@ with open(filename_test, 'r', encoding='utf-8') as file_test:
 # TEST_GPRMC
 for line in range(num):
     data_test_split = data_test[line].split(',')
-    if data_test_split[0] == '$GNRMC':
+    if data_test_split[0] == '$GBRMC':
         if data_test_split[3]:
             data_test_gnrmc[data_test_split[1].split('.')[0]] = [data_test_split[5],  # 经度
                                                                  data_test_split[3],  # 纬度
@@ -87,12 +86,7 @@ for line in range(num):
             data_test_gngga[data_test_split[1].split('.')[0]] = [data_test_split[4],  # 经度
                                                                  data_test_split[2],  # 纬度
                                                                  data_test_split[9],  # 海平面高度
-                                                                 data_test_split[10]]  # 地平面高度
-# 开始比对测试GGA
-for key in data_test_gngga:
-    if key in data_ref_gpgga.keys():
-        high = float(data_test_gngga[key][3]) - float(data_ref_gpgga[key][3])
-        data_high_final.append(high)
+                                                                 data_test_split[11]]  # 地平面高度
 
 # 开始比对测试RMC_动态点
 for key in data_test_gnrmc:
@@ -105,6 +99,12 @@ for key in data_test_gnrmc:
         data_ref_total_distance.append([data_ref_gprmc[key][1], data_ref_gprmc[key][0]])
         data_detail_final.append(distance)
         data_speed_final.append(speed)
+
+# 开始比对测试GGA
+for key in data_test_gngga:
+    if key in data_ref_gpgga.keys():
+        high = float(data_test_gngga[key][3]) - float(data_ref_gpgga[key][3])
+        data_high_final.append(high)
 
 # 待测件行驶的里程数
 for i in range(0, len(data_test_total_distance)-2):
@@ -125,17 +125,17 @@ print('行驶的里程数：', round(ref_total_distance, 4))
 print('行驶的里程误差：', round(ref_total_distance - test_total_distance, 4))
 print('定位误差最大值:', round(max(data_detail_final), 4))
 print('速度误差最大值:', round(max(data_speed_final), 4))
-print('高程误差最大值:', round(max(data_high_final), 4))
+# print('高程误差最大值:', round(max(data_high_final), 4))
 print('速度误差最大值:', round(max(data_speed_final), 4))
 print('定位误差最小值:', round(min(data_detail_final), 4))
 print('速度误差最小值:', round(min(data_speed_final), 4))
-print('高程误差最小值:', round(min(data_high_final), 4))
+# print('高程误差最小值:', round(min(data_high_final), 4))
 print('定位误差平均值:', round(sum(data_detail_final)/len(data_detail_final), 4))
 print('速度误差平均值:', round(sum(data_speed_final)/len(data_speed_final), 4))
-print('高程误差平均值:', round(sum(data_high_final)/len(data_high_final), 4))
+# print('高程误差平均值:', round(sum(data_high_final)/len(data_high_final), 4))
 print('定位误差标准差:', round(math.sqrt(sum(list(map(lambda x: x**2, data_detail_final))) / (len(data_detail_final)-1)), 4))
 print('速度误差标准差:', round(math.sqrt(sum(list(map(lambda x: x**2, data_speed_final))) / (len(data_speed_final)-1)), 4))
-print('高程误差标准差:', round(math.sqrt(sum(list(map(lambda x: x**2, data_high_final))) / (len(data_high_final)-1)), 4))
+# print('高程误差标准差:', round(math.sqrt(sum(list(map(lambda x: x**2, data_high_final))) / (len(data_high_final)-1)), 4))
 
 y1 = data_detail_final
 y2 = data_speed_final
