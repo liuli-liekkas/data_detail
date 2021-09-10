@@ -31,8 +31,8 @@ def geo_distance(lng_test, lat_test, lng_ref, lat_ref):
 
 
 # 数据格式化
-filename_ref = 'gnss/test20210830/ublox_bd_dynamic_precision_opensky_ref.txt'
-filename_test = 'gnss/test20210830/ublox_bd_dynamic_precision_opensky.txt'
+filename_ref = 'gnss/test20210830/quectel_bd_dynamic_precision_urbancanyon_ref.txt'
+filename_test = 'gnss/test20210830/quectel_bd_dynamic_precision_urbancanyon.txt'
 data_ref_gprmc = {}
 data_ref_gpgga = {}
 data_test_gnrmc = {}
@@ -76,7 +76,7 @@ with open(filename_test, 'r', encoding='utf-8') as file_test:
 # TEST_GPRMC
 for line in range(num):
     data_test_split = data_test[line].split(',')
-    if data_test_split[0] == '$GNRMC':
+    if data_test_split[0] == '$GBRMC':
         if data_test_split[7]:  # 以速度为判定条件，有时候存在定位不存在速度
             # print(data_test_split)
             data_test_gnrmc[data_test_split[1].split('.')[0]] = [data_test_split[5],  # 经度
@@ -85,7 +85,7 @@ for line in range(num):
 # TEST_GNGGA
 for line in range(num):
     data_test_split = data_test[line].split(',')
-    if data_test_split[0] == '$GNGGA':
+    if data_test_split[0] == '$GBGGA':
         if data_test_split[2]:
             # print(data_test_split)
             data_test_gngga[data_test_split[1].split('.')[0]] = [data_test_split[4],  # 经度
