@@ -31,8 +31,8 @@ def geo_distance(lng_test, lat_test, lng_ref, lat_ref):
 
 
 # 数据格式化
-filename_ref = 'gnss/test20210830/quectel_bd_dynamic_precision_urbancanyon_ref.txt'
-filename_test = 'gnss/test20210830/quectel_bd_dynamic_precision_urbancanyon.txt'
+filename_ref = 'gnss/test20210830/unicore_gps_dynamic_precision_urbancanyon_ref.txt'
+filename_test = 'gnss/test20210830/unicore_gps_dynamic_precision_urbancanyon.txt'
 data_ref_gprmc = {}
 data_ref_gpgga = {}
 data_test_gnrmc = {}
@@ -76,8 +76,8 @@ with open(filename_test, 'r', encoding='utf-8') as file_test:
 # TEST_GPRMC
 for line in range(num):
     data_test_split = data_test[line].split(',')
-    if data_test_split[0] == '$GBRMC':
-        if data_test_split[7]:  # 以速度为判定条件，有时候存在定位不存在速度
+    if data_test_split[0] == '$GNRMC':
+        if len(data_test_split) > 7:  # 以速度为判定条件，有时候存在定位不存在速度
             # print(data_test_split)
             data_test_gnrmc[data_test_split[1].split('.')[0]] = [data_test_split[5],  # 经度
                                                                  data_test_split[3],  # 纬度
@@ -85,8 +85,8 @@ for line in range(num):
 # TEST_GNGGA
 for line in range(num):
     data_test_split = data_test[line].split(',')
-    if data_test_split[0] == '$GBGGA':
-        if data_test_split[2]:
+    if data_test_split[0] == '$GNGGA':
+        if len(data_test_split) > 9:
             # print(data_test_split)
             data_test_gngga[data_test_split[1].split('.')[0]] = [data_test_split[4],  # 经度
                                                                  data_test_split[2],  # 纬度
@@ -130,19 +130,18 @@ for i in range(0, len(data_ref_total_distance) - 2):
 print('距离单位：m，速度单位：m/s')
 print('行驶的里程数：', round(ref_total_distance, 4))
 print('行驶的里程误差：', round(ref_total_distance - test_total_distance, 4))
-print('定位误差最大值:', round(max(data_detail_final), 4))
-print('速度误差最大值:', round(max(data_speed_final), 4))
+print('水平误差最大值:', round(max(data_detail_final), 4))
 print('高程误差最大值:', round(max(data_high_final), 4))
 print('速度误差最大值:', round(max(data_speed_final), 4))
-print('定位误差最小值:', round(min(data_detail_final), 4))
-print('速度误差最小值:', round(min(data_speed_final), 4))
+print('水平误差最小值:', round(min(data_detail_final), 4))
 print('高程误差最小值:', round(min(data_high_final), 4))
-print('定位误差平均值:', round(sum(data_detail_final) / len(data_detail_final), 4))
-print('速度误差平均值:', round(sum(data_speed_final) / len(data_speed_final), 4))
+print('速度误差最小值:', round(min(data_speed_final), 4))
+print('水平误差平均值:', round(sum(data_detail_final) / len(data_detail_final), 4))
 print('高程误差平均值:', round(sum(data_high_final) / len(data_high_final), 4))
-print('定位误差标准差:', round(math.sqrt(sum(list(map(lambda x: x ** 2, data_detail_final))) / (len(data_detail_final) - 1)), 4))
-print('速度误差标准差:', round(math.sqrt(sum(list(map(lambda x: x ** 2, data_speed_final))) / (len(data_speed_final) - 1)), 4))
-print('高程误差标准差:', round(math.sqrt(sum(list(map(lambda x: x ** 2, data_high_final))) / (len(data_high_final) - 1)), 4))
+print('速度误差平均值:', round(sum(data_speed_final) / len(data_speed_final), 4))
+print('水平误差标准差:', round(math.sqrt(sum(list(map(lambda x: x ** 2, data_detail_final[0:1000]))) / (len(data_detail_final) - 1)), 4))
+print('高程误差标准差:', round(math.sqrt(sum(list(map(lambda x: x ** 2, data_high_final[0:1000]))) / (len(data_high_final) - 1)), 4))
+print('速度误差标准差:', round(math.sqrt(sum(list(map(lambda x: x ** 2, data_speed_final[0:1000]))) / (len(data_speed_final) - 1)), 4))
 
 y1 = data_detail_final
 y2 = data_speed_final

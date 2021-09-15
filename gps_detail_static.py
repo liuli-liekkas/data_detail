@@ -22,7 +22,7 @@ def geo_distance(lng_test, lat_test):
 
 
 # 数据格式化
-filename_test = 'gnss/test20210830/mtk_combine_dynamic_precision_opensky.txt'
+filename_test = 'gnss/test20210830/mtk_gps_static_precision_urbancanyon.txt'
 data_ref_gprmc = {}
 data_ref_gpgga = {}
 data_test_gnrmc = {}
@@ -40,7 +40,7 @@ with open(filename_test, 'r', encoding='utf-8') as file_test:
     data_test = file_test.readlines()
     num = len(data_test)
 # TEST_GPRMC
-for line in range(num):
+for line in range(1000, num):
     data_test_split = data_test[line].split(',')
     if data_test_split[0] == '$GNRMC':
         if data_test_split[5]:
@@ -51,8 +51,8 @@ for line in range(num):
 for line in range(num):
     data_test_split = data_test[line].split(',')
     if data_test_split[0] == '$GNGGA':
-        if data_test_split[3]:
-            high = float(data_test_split[9]) - 38.117  # -7.855 计算机内部设置值
+        if len(data_test_split) > 9:
+            high = float(data_test_split[9])  # - 7.855  # - 38.117   计算机内部设置值
             data_high_final.append(high)
 
 print('定位误差最大值:', round(max(data_detail_final), 4))
