@@ -31,8 +31,8 @@ def geo_distance(lng_test, lat_test, lng_ref, lat_ref):
 
 
 # 数据格式化
-filename_ref = 'gnss/test20210830/quectel_combine_dynamic_precision_opensky_ref.txt'
-filename_test = 'gnss/test20210830/quectel_combine_dynamic_precision_opensky.txt'
+filename_ref = 'gnss/test20210830/unicore_bd_dynamic_precision_opensky_new_ref.txt'
+filename_test = 'gnss/test20210830/unicore_bd_dynamic_precision_opensky_new.txt'
 data_ref_gprmc = {}
 data_ref_gpgga = {}
 data_test_gnrmc = {}
