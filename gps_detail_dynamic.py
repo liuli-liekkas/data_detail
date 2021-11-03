@@ -31,8 +31,8 @@ def geo_distance(lng_test, lat_test, lng_ref, lat_ref):
 
 
 # 数据格式化
-filename_ref = 'gnss/test20210830/unicore_bd_dynamic_precision_opensky_new_ref.txt'
-filename_test = 'gnss/test20210830/unicore_bd_dynamic_precision_opensky_new.txt'
+filename_ref = 'gnss/test20210830/quectel_combine_dynamic_precision_opensky_420005_ref.txt'
+filename_test = 'gnss/test20210830/quectel_combine_dynamic_precision_opensky_420005.txt'
 data_ref_gprmc = {}
 data_ref_gpgga = {}
 data_test_gnrmc = {}
@@ -61,7 +61,7 @@ for line in range(num):
 # REF_GPGGA
 for line in range(num):
     data_ref_split = data_ref[line].split(',')
-    if data_ref_split[0] == '$GPGGA':
+    if data_ref_split[0] == '$GPGGA': 
         if len(data_ref_split) > 11:
             if data_ref_split[4]:
                 data_ref_gpgga[data_ref_split[1]] = [data_ref_split[4],  # 经度
@@ -76,18 +76,18 @@ with open(filename_test, 'r', encoding='utf-8') as file_test:
 # TEST_GPRMC
 for line in range(num):
     data_test_split = data_test[line].split(',')
-    if data_test_split[0] == '$GNRMC':
+    if data_test_split[0] == '$GNRMC' and data_test_split[1]:
         if len(data_test_split) > 7:  # 以速度为判定条件，有时候存在定位不存在速度
             # print(data_test_split)
-            data_test_gnrmc[data_test_split[1].split('.')[0]] = [data_test_split[5],  # 经度
-                                                                 data_test_split[3],  # 纬度
-                                                                 data_test_split[7]]  # 速度
+            if data_test_split[1].split('.')[1] == '00':
+                data_test_gnrmc[data_test_split[1].split('.')[0]] = [data_test_split[5],  # 经度
+                                                                     data_test_split[3],  # 纬度
+                                                                     data_test_split[7]]  # 速度
 # TEST_GNGGA
 for line in range(num):
     data_test_split = data_test[line].split(',')
     if data_test_split[0] == '$GNGGA':
         if len(data_test_split) > 9:
-            # print(data_test_split)
             data_test_gngga[data_test_split[1].split('.')[0]] = [data_test_split[4],  # 经度
                                                                  data_test_split[2],  # 纬度
                                                                  data_test_split[9]]  # 海平面高度
@@ -95,6 +95,9 @@ for line in range(num):
 # 开始比对测试RMC_动态点
 for key in data_test_gnrmc:
     if key in data_ref_gprmc.keys():
+        if data_test_gnrmc[key][0] == '' or data_test_gnrmc[key][1] == '':
+            print(key)
+            print(data_test_gnrmc[key])
         distance = geo_distance(float(data_test_gnrmc[key][1]), float(data_test_gnrmc[key][0]),
                                 float(data_ref_gprmc[key][1]), float(data_ref_gprmc[key][0]))
         # print(key)
@@ -142,6 +145,18 @@ print('速度误差平均值:', round(sum(data_speed_final) / len(data_speed_fin
 print('水平误差标准差:', round(math.sqrt(sum(list(map(lambda x: x ** 2, data_detail_final[0:1000]))) / (len(data_detail_final) - 1)), 4))
 print('高程误差标准差:', round(math.sqrt(sum(list(map(lambda x: x ** 2, data_high_final[0:1000]))) / (len(data_high_final) - 1)), 4))
 print('速度误差标准差:', round(math.sqrt(sum(list(map(lambda x: x ** 2, data_speed_final[0:1000]))) / (len(data_speed_final) - 1)), 4))
+data_detail_final = list(map(abs, data_detail_final))
+data_detail_final.sort()
+data_high_final = list(map(abs, data_high_final))
+data_high_final.sort()
+data_speed_final = list(map(abs, data_speed_final))
+data_speed_final.sort()
+data_detail_final_len = len(data_detail_final)
+data_high_final_len = len(data_high_final)
+data_speed_final_len = len(data_speed_final)
+print('水平误差95%置信:', round(data_detail_final[math.ceil(data_detail_final_len * 0.95)], 4))
+print('高程误差95%置信:', round(data_high_final[math.ceil(data_high_final_len * 0.95)], 4))
+print('速度误差95%置信:', round(data_speed_final[math.ceil(data_speed_final_len * 0.95)], 4))
 
 y1 = data_detail_final
 y2 = data_speed_final
