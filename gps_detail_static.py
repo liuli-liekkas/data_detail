@@ -1,7 +1,4 @@
-import os.path
 import math
-import numpy as np
-import matplotlib as mpl
 import matplotlib.pyplot as plt
 
 # 经典两点计算公式
@@ -22,7 +19,7 @@ def geo_distance(lng_test, lat_test):
 
 
 # 数据格式化
-filename_test = 'gnss/test20210830/quectel_gps_static_precision_urbancanyon.txt'
+filename_test = 'gnss/test20211101/model1_glonass_static_opensky.txt'
 data_ref_gprmc = {}
 data_ref_gpgga = {}
 data_test_gnrmc = {}
@@ -42,8 +39,7 @@ with open(filename_test, 'r', encoding='utf-8') as file_test:
 # TEST_GPRMC
 for line in range(num):
     data_test_split = data_test[line].split(',')
-    if data_test_split[0] == 'GNRMC':
-        print('ok')
+    if data_test_split[0] == '$GPRMC':
         if data_test_split[5]:
             distance = geo_distance(float(data_test_split[5]), float(data_test_split[3]))
             data_detail_final.append(distance)
@@ -51,9 +47,8 @@ for line in range(num):
 # TEST_GNGGA
 for line in range(num):
     data_test_split = data_test[line].split(',')
-    if data_test_split[0] == 'GNGGA':
-        print('ok')
-        if len(data_test_split) > 9:
+    if data_test_split[0] == '$GPGGA':
+        if data_test_split[9]:
             high = float(data_test_split[9])  # - 7.855  # - 38.117   计算机内部设置值
             data_high_final.append(high)
 

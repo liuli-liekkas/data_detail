@@ -1,7 +1,4 @@
-import os.path
 import math
-import numpy as np
-import matplotlib as mpl
 import matplotlib.pyplot as plt
 
 
@@ -31,8 +28,8 @@ def geo_distance(lng_test, lat_test, lng_ref, lat_ref):
 
 
 # 数据格式化
-filename_ref = 'gnss/test20210830/quectel_combine_dynamic_precision_opensky_420005_ref.txt'
-filename_test = 'gnss/test20210830/quectel_combine_dynamic_precision_opensky_420005.txt'
+filename_ref = 'gnss/test20211101/model1_combine_dynamic_opensky_ref.txt'
+filename_test = 'gnss/test20211101/model1_combine_dynamic_opensky.txt'
 data_ref_gprmc = {}
 data_ref_gpgga = {}
 data_test_gnrmc = {}
