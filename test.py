@@ -1,57 +1,32 @@
-import openpyxl
+import cv2
+import pytesseract
+from PIL import Image
 import numpy as np
-import pymysql
 
-# 连接数据库
-conn = pymysql.connect(host='127.0.0.1', user='root', password='ll891119', port=3306, db='furthereast')
-# 建立游标
-cur = conn.cursor()
-# 载入excel表格
-wb = openpyxl.load_workbook('test.xlsx')
-sh = wb['Sheet1']
-department = []
-# 按行取数
-for case in list(sh.rows)[1:]:
-	# 读取所有部门
-	if case[7].value not in department:
-		department.append(case[7].value)
-# 部门录入数据库
-for case in department:
-	cur.execute("""INSERT INTO TEST(Department) VALUES (%s)""" % (case))
-# print(department)
+# img = cv2.imread('C:/Users/liuli/PycharmProjects/data_detail/2021home_e/quarter1/month1/2.PNG')
+# img2gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+# img2var = cv2.Laplacian(img2gray, cv2.CV_64F).var()
+# cv2.namedWindow('GreyModeOpen', cv2.WINDOW_NORMAL)
+# cv2.imshow('GreyModeOpen', img)
+# cv2.waitKey(0)
 
-num = [0] * len(department)
-d1 = {}
-d2 = {}
-# 创建两个空字典列表
-for i in range(len(department)):
-	d1[department[i]] = num[i]
-	d2[department[i]] = num[i]
-# print(d1)
-
-for case in list(sh.rows)[1:]:
-	# 实际产生业务
-	if case[53].value == '是':
-		d1[case[7].value] += 1
-		# 是否使用包车
-		if case[15].value == '是':
-			d2[case[7].value] += 1
-print(d1)
-print(d2)
+# words = pytesseract.image_to_string(Image.open('./2021home_e/quarter1/month1/1.PNG'), lang='chi_sim')
+# print(words)
 
 
+def custom_blur_demo(image):
+    kernel = np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]], np.float32)  # 锐化
+    dst = cv2.filter2D(image, -1, kernel=kernel)
+    words = pytesseract.image_to_string(dst, lang='chi_sim')
+    print(words)
+    cv2.imshow("custom_blur_demo", dst)
 
 
-# data = []
-# message = []
-# num = 0
-# for case in list(sh.rows)[1:]:
-# 	message = [case[7].value, case[10].value, case[15].value, 0, 0]
-# 	# value = case.value
-# 	# if value not in department:
-# 	# 	department.append(value)
-# 	data.append(message)
-# print(len(data))
-# print(np.array(data).reshape(len(data), 5))
+src = cv2.imread("./2021home_e/quarter1/month1/1.PNG ")
+cv2.namedWindow("input image", cv2.WINDOW_AUTOSIZE)
+cv2.imshow("input image", src)
+custom_blur_demo(src)
+# words = pytesseract.image_to_string(Image.open(src), lang='chi_sim')
 
-
+cv2.waitKey(0)
+cv2.destroyAllWindows()
