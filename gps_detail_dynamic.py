@@ -28,8 +28,8 @@ def geo_distance(lng_test, lat_test, lng_ref, lat_ref):
 
 
 # 数据格式化
-filename_ref = 'gnss/test20211101/model3_combine_dynamic_urbancanyon_ref.txt'
-filename_test = 'gnss/test20211101/model3_combine_dynamic_urbancanyon.txt'
+filename_ref = 'gnss/test20211223/model2_gps_static_opensky_ref.txt'
+filename_test = 'gnss/test20211223/model2_gps_static_opensky.txt'
 data_ref_gprmc = {}
 data_ref_gpgga = {}
 data_test_gnrmc = {}
@@ -109,8 +109,11 @@ for key in data_test_gnrmc:
 # 开始比对测试GGA
 for key in data_test_gngga:
     if key in data_ref_gpgga.keys():
-        high = float(data_test_gngga[key][2]) - float(data_ref_gpgga[key][2])
-        data_high_final.append(high)
+        if data_test_gngga[key][2] and data_ref_gpgga[key][2]:
+            # print(data_test_gngga)
+            # print(data_ref_gpgga)
+            high = float(data_test_gngga[key][2]) - float(data_ref_gpgga[key][2])
+            data_high_final.append(high)
 
 # 待测件行驶的里程数
 for i in range(0, len(data_test_total_distance) - 2):

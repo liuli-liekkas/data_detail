@@ -19,7 +19,7 @@ def geo_distance(lng_test, lat_test):
 
 
 # 数据格式化
-filename_test = 'gnss/test20211101/model1_glonass_static_opensky.txt'
+filename_test = 'gnss/test20211223/model2_gps+galileo+glonass_static_opensky.txt'
 data_ref_gprmc = {}
 data_ref_gpgga = {}
 data_test_gnrmc = {}
@@ -40,7 +40,8 @@ with open(filename_test, 'r', encoding='utf-8') as file_test:
 for line in range(num):
     data_test_split = data_test[line].split(',')
     if data_test_split[0] == '$GPRMC':
-        if data_test_split[5]:
+        # 很多数据读取时存在错位乱码
+        if data_test_split[2] == 'A' and data_test_split[4] == 'N':
             distance = geo_distance(float(data_test_split[5]), float(data_test_split[3]))
             data_detail_final.append(distance)
 
@@ -49,7 +50,7 @@ for line in range(num):
     data_test_split = data_test[line].split(',')
     if data_test_split[0] == '$GPGGA':
         if data_test_split[9]:
-            high = float(data_test_split[9])  # - 7.855  # - 38.117   计算机内部设置值
+            high = float(data_test_split[9])  #- 7.855  # - 38.117   计算机内部设置值
             data_high_final.append(high)
 
 print('定位误差最大值:', round(max(data_detail_final), 4))
