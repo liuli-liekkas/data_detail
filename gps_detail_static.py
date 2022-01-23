@@ -19,7 +19,7 @@ def geo_distance(lng_test, lat_test):
 
 
 # 数据格式化
-filename_test = 'gnss/test20211223/model2_gps+galileo+glonass_static_opensky.txt'
+filename_test = 'gnss/test20211223/model3_galileo_static_opensky.txt'
 data_ref_gprmc = {}
 data_ref_gpgga = {}
 data_test_gnrmc = {}
