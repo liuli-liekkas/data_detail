@@ -19,7 +19,7 @@ def geo_distance(lng_test, lat_test):
 
 
 # 数据格式化
-filename_test = 'gnss/test20211223/model3_galileo_static_opensky.txt'
+filename_test = 'gnss/test20220223/model3_galileo_static_opensky.txt'
 data_ref_gprmc = {}
 data_ref_gpgga = {}
 data_test_gnrmc = {}
@@ -39,7 +39,7 @@ with open(filename_test, 'r', encoding='utf-8') as file_test:
 # TEST_GPRMC
 for line in range(num):
     data_test_split = data_test[line].split(',')
-    if data_test_split[0] == '$GPRMC':
+    if data_test_split[0] == '$GPRMC' or data_test_split[0] == '$GNRMC':
         # 很多数据读取时存在错位乱码
         if data_test_split[2] == 'A' and data_test_split[4] == 'N':
             distance = geo_distance(float(data_test_split[5]), float(data_test_split[3]))
@@ -48,7 +48,7 @@ for line in range(num):
 # TEST_GNGGA
 for line in range(num):
     data_test_split = data_test[line].split(',')
-    if data_test_split[0] == '$GPGGA':
+    if data_test_split[0] == '$GPGGA' or data_test_split[0] == '$GNGGA':
         if data_test_split[9]:
             high = float(data_test_split[9])  #- 7.855  # - 38.117   计算机内部设置值
             data_high_final.append(high)

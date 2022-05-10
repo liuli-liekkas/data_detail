@@ -28,8 +28,8 @@ def geo_distance(lng_test, lat_test, lng_ref, lat_ref):
 
 
 # 数据格式化
-filename_ref = 'gnss/test20211223/model3_gps+galileo_dynamic_urbancanyon_ref.txt'
-filename_test = 'gnss/test20211223/model3_gps+galileo_dynamic_urbancanyon.txt'
+filename_ref = 'gnss/test20220223/model3_gps+galileo_dynamic_opensky_ref.txt'
+filename_test = 'gnss/test20220223/model3_gps+galileo_dynamic_opensky.txt'
 data_ref_gprmc = {}
 data_ref_gpgga = {}
 data_test_gnrmc = {}
@@ -58,7 +58,7 @@ for line in range(num):
 # REF_GPGGA
 for line in range(num):
     data_ref_split = data_ref[line].split(',')
-    if data_ref_split[0] == '$GPGGA': 
+    if data_ref_split[0] == '$GPGGA':
         if len(data_ref_split) > 11:
             if data_ref_split[4]:
                 data_ref_gpgga[data_ref_split[1]] = [data_ref_split[4],  # 经度
@@ -73,8 +73,8 @@ with open(filename_test, 'r', encoding='utf-8') as file_test:
 # TEST_GPRMC
 for line in range(num):
     data_test_split = data_test[line].split(',')
-    if data_test_split[0] == '$GPRMC' and data_test_split[1]:
-        if len(data_test_split) > 7:  # 以速度为判定条件，有时候存在定位不存在速度
+    if data_test_split[0][-5:] == 'GPRMC' or data_test_split[0][-5:] == 'GNRMC' and data_test_split[1]:
+        if data_test_split[7]:  # 以速度为判定条件，有时候存在定位不存在速度
             # print(data_test_split)
             if data_test_split[1].split('.')[1] == '00':
                 data_test_gnrmc[data_test_split[1].split('.')[0]] = [data_test_split[5],  # 经度
@@ -83,7 +83,7 @@ for line in range(num):
 # TEST_GNGGA
 for line in range(num):
     data_test_split = data_test[line].split(',')
-    if data_test_split[0] == '$GPGGA':
+    if data_test_split[0][-5:] == 'GPGGA' or data_test_split[0][-5:] == 'GNGGA':
         if len(data_test_split) > 9:
             data_test_gngga[data_test_split[1].split('.')[0]] = [data_test_split[4],  # 经度
                                                                  data_test_split[2],  # 纬度
