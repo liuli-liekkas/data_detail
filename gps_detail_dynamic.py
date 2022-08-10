@@ -28,8 +28,8 @@ def geo_distance(lng_test, lat_test, lng_ref, lat_ref):
 
 
 # 数据格式化
-filename_ref = 'gnss/test20220223/model3_gps+galileo_dynamic_opensky_ref.txt'
-filename_test = 'gnss/test20220223/model3_gps+galileo_dynamic_opensky.txt'
+filename_ref = 'gnss/test20220725/model1_gps+galileo_dynamic_opensky_ref.txt'
+filename_test = 'gnss/test20220725/model1_gps+galileo_dynamic_opensky.txt'
 data_ref_gprmc = {}
 data_ref_gpgga = {}
 data_test_gnrmc = {}
@@ -41,6 +41,7 @@ data_ref_total_distance = []
 data_test_total_distance = []
 ref_total_distance = 0
 test_total_distance = 0
+distance = 0
 
 # 录入参考数据
 with open(filename_ref, 'r') as file_ref:
@@ -55,6 +56,8 @@ for line in range(num):
                 data_ref_gprmc[data_ref_split[1]] = [data_ref_split[5],  # 经度
                                                      data_ref_split[3],  # 纬度
                                                      data_ref_split[7]]  # 速度
+# print(data_ref_gprmc)
+
 # REF_GPGGA
 for line in range(num):
     data_ref_split = data_ref[line].split(',')
@@ -65,6 +68,7 @@ for line in range(num):
                                                      data_ref_split[2],  # 纬度
                                                      data_ref_split[9]]  # 海平面高度
                 # data_ref_split[11]  # 地平面高度
+# print(data_ref_gpgga)
 
 # 录入测试数据_动态点
 with open(filename_test, 'r', encoding='utf-8') as file_test:
@@ -73,13 +77,14 @@ with open(filename_test, 'r', encoding='utf-8') as file_test:
 # TEST_GPRMC
 for line in range(num):
     data_test_split = data_test[line].split(',')
-    if data_test_split[0][-5:] == 'GPRMC' or data_test_split[0][-5:] == 'GNRMC' and data_test_split[1]:
-        if data_test_split[7]:  # 以速度为判定条件，有时候存在定位不存在速度
-            # print(data_test_split)
+    if data_test_split[0][-5:] == 'GPRMC' or data_test_split[0][-5:] == 'GNRMC' and data_test_split[1] and len(data_test_split) > 7:
+        # 以速度为判定条件，有时候存在定位不存在速度
+        if len(data_test_split) > 7 and data_test_split[2] == 'A' and data_test_split[4] == 'N' and data_test_split[6] == 'E':
             if data_test_split[1].split('.')[1] == '00':
                 data_test_gnrmc[data_test_split[1].split('.')[0]] = [data_test_split[5],  # 经度
                                                                      data_test_split[3],  # 纬度
                                                                      data_test_split[7]]  # 速度
+
 # TEST_GNGGA
 for line in range(num):
     data_test_split = data_test[line].split(',')
@@ -91,15 +96,13 @@ for line in range(num):
             # data_test_split[11]  # 地平面高度
 # 开始比对测试RMC_动态点
 for key in data_test_gnrmc:
+    # print(key)
     if key in data_ref_gprmc.keys():
-        if data_test_gnrmc[key][0] == '' or data_test_gnrmc[key][1] == '':
-            print(key)
-            print(data_test_gnrmc[key])
         distance = geo_distance(float(data_test_gnrmc[key][1]), float(data_test_gnrmc[key][0]),
                                 float(data_ref_gprmc[key][1]), float(data_ref_gprmc[key][0]))
         # print(key)
-        # print(data_test_gnrmc[key])
-        # print(data_ref_gprmc[key])
+        # print(data_test_gnrmc[key], 'test')
+        # print(data_ref_gprmc[key], 'ref')
         speed = (float(data_test_gnrmc[key][2]) - float(data_ref_gprmc[key][2])) / 3.6 * 1.852
         data_test_total_distance.append([data_test_gnrmc[key][1], data_test_gnrmc[key][0]])
         data_ref_total_distance.append([data_ref_gprmc[key][1], data_ref_gprmc[key][0]])

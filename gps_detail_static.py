@@ -19,7 +19,7 @@ def geo_distance(lng_test, lat_test):
 
 
 # 数据格式化
-filename_test = 'gnss/test20220708/model3_gps+galileo+glonass_static_opensky.txt'
+filename_test = 'gnss/test20220725/model2_gps_static_opensky.txt'
 data_ref_gprmc = {}
 data_ref_gpgga = {}
 data_test_gnrmc = {}
@@ -41,26 +41,27 @@ for line in range(num):
     data_test_split = data_test[line].split(',')
     if data_test_split[0] == '$GPRMC' or data_test_split[0] == '$GNRMC':
         # 很多数据读取时存在错位乱码
-        if data_test_split[2] == 'A' and data_test_split[4] == 'N':
+        if data_test_split[2] == 'A' and data_test_split[4] == 'N' and data_test_split[6] == 'E':
             distance = geo_distance(float(data_test_split[5]), float(data_test_split[3]))
             data_detail_final.append(distance)
 
 # TEST_GNGGA
-for line in range(num):
-    data_test_split = data_test[line].split(',')
-    if data_test_split[0] == '$GPGGA' or data_test_split[0] == '$GNGGA':
-        if data_test_split[9]:
-            high = float(data_test_split[9])  #- 7.855  # - 38.117   计算机内部设置值
-            data_high_final.append(high)
+# for line in range(num):
+#     data_test_split = data_test[line].split(',')
+#     print(data_test_split)
+#     if data_test_split[0] == '$GPGGA' or data_test_split[0] == '$GNGGA':
+#         if data_test_split[9]:
+#             high = float(data_test_split[9])  #- 7.855  # - 38.117   计算机内部设置值
+#             data_high_final.append(high)
 
 print('定位误差最大值:', round(max(data_detail_final), 4))
-print('高度误差最大值:', round(max(data_high_final), 4))
+# print('高度误差最大值:', round(max(data_high_final), 4))
 print('定位误差最小值:', round(min(data_detail_final), 4))
-print('高度误差最小值:', round(min(data_high_final), 4))
+# print('高度误差最小值:', round(min(data_high_final), 4))
 print('定位误差平均值:', round(sum(data_detail_final)/len(data_detail_final), 4))
-print('高度误差平均值:', round(sum(data_high_final)/len(data_high_final), 4))
+# print('高度误差平均值:', round(sum(data_high_final)/len(data_high_final), 4))
 print('定位误差标准差:', round(math.sqrt(sum(list(map(lambda x: x**2, data_detail_final))) / (len(data_detail_final)-1)), 4))
-print('高度误差标准差:', round(math.sqrt(sum(list(map(lambda x: x**2, data_high_final))) / (len(data_high_final)-1)), 4))
+# print('高度误差标准差:', round(math.sqrt(sum(list(map(lambda x: x**2, data_high_final))) / (len(data_high_final)-1)), 4))
 
 y1 = data_detail_final
 y2 = data_high_final
